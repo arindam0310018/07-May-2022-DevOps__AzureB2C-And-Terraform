@@ -1,0 +1,5 @@
+b2c-country-code    = "CH"
+b2c-data-loc        = "Europe"
+b2c-name           = "AMTestb2ctenant005"
+b2c-rg              = "_Admin-rg"
+b2c-sku             = "PremiumP1"
