@@ -1,0 +1,88 @@
+trigger:
+  none
+
+######################
+#DECLARE PARAMETERS:-
+######################
+parameters:
+- name: SubscriptionID
+  displayName: Subscription ID Details Follow Below:-
+  default: 210e66cb-55cf-424e-8daa-6cad804ab604
+  values:
+  -  210e66cb-55cf-424e-8daa-6cad804ab604
+
+- name: ServiceConnection
+  displayName: Service Connection Name Follows Below:-
+  default: amcloud-cicd-service-connection
+  values:
+  -  amcloud-cicd-service-connection
+
+- name: AADB2CName
+  displayName: Please Provide the AAD B2C Tenant Name:-
+  type: object
+  default: <Please Provide the Name of AAD B2C>
+
+######################
+#DECLARE VARIABLES:-
+######################
+variables:
+  AADExists: AlreadyExists
+  AADProvider: NotRegistered
+  BuildAgent: windows-latest
+  
+#########################
+# Declare Build Agents:-
+#########################
+pool:
+  vmImage: $(BuildAgent)
+
+###################
+# Declare Stages:-
+###################
+stages:
+
+- stage: VALIDATE_AAD_B2C_PROVIDER_AND_NAME
+   
+  jobs:
+  - job: IF_AAD_B2C_PROVIDER_AND_NAME_EXISTS 
+    displayName: IF AAD B2C PROVIDER AND NAME EXISTS
+    steps:
+    - task: AzureCLI@2
+      displayName: CHECK AAD B2C PROVIDER AND NAME
+      inputs:
+        azureSubscription: ${{ parameters.ServiceConnection }}
+        scriptType: ps
+        scriptLocation: inlineScript
+        inlineScript: |
+          az --version
+          az account set --subscription ${{ parameters.SubscriptionID }}
+          az account show  
+          $B2CJSON = @{
+              countryCode = "CH"
+              name = "${{ parameters.AADB2CName }}" 
+            }
+          $infile = "B2CDetails.json"
+          Set-Content -Path $infile -Value ($B2CJSON | ConvertTo-Json)
+          
+          $i = az provider show --namespace "Microsoft.AzureActiveDirectory" --query "registrationState" -o tsv
+          $j = az rest --method POST --url https://management.azure.com/subscriptions/${{ parameters.SubscriptionID }}/providers/Microsoft.AzureActiveDirectory/checkNameAvailability?api-version=2019-01-01-preview --body "@B2CDetails.json" --query 'reason' -o tsv
+          
+
+          if ($i -eq "$(AADProvider)" -and $j -eq "$(AADExists)") {
+            echo "###############################################################"
+            echo "Provider $(AADProvider) and Name $(AADExists)"
+            echo "###############################################################"
+            exit 1
+            }
+          
+          elseif ($i -eq "$(AADProvider)" -or $j -eq "$(AADExists)") {
+            echo "###############################################################"
+            echo "Either Name $(AADExists) or Provider $(AADProvider)"
+            echo "###############################################################"
+            exit 1
+            }
+          else {
+            echo "###############################################################"
+            echo "MOVE TO NEXT STAGE - DEPLOY AZURE AAD B2C"
+            echo "###############################################################"
+            }
