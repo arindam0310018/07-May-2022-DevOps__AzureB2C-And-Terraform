@@ -1,4 +1,4 @@
-# CAN WE DEPLOY AZ B2C USING TERRAFORM AND DEVOPS ?
+# CAN WE DEPLOY AZ B2C USING TERRAFORM AND DEVOPS
 
 Greetings my fellow Technology Advocates and Specialists.
 
