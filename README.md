@@ -10,9 +10,7 @@ In this Session, I will demonstrate -
 | --------- |
 | __LIVE DEMO__ was Recorded as part of my Presentation in __AZURE BACK TO SCHOOL - 2022__ Forum/Platform |
 | Duration of My Demo = __49 Mins 17 Secs__ |
-
 | [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/z18Rf9SCYPs/0.jpg)](https://www.youtube.com/watch?v=z18Rf9SCYPs&t=1386s) |
-| --------- |
 
 | __REQUIREMENTS:-__ |
 | --------- |
@@ -739,3 +737,7 @@ terraform apply --var-file="b2c.tfvars"
 | __HOW DOES THE PLACEHOLDER LOOKS LIKE AFTER TERRAFORM EXECUTION :-__ |
 | --------- |
 | ![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/dfos3mv7o21y9ewxft8j.png) |
+
+Hope You Enjoyed the Session!!!
+
+__Stay Safe | Keep Learning | Spread Knowledge__
